@@ -187,4 +187,4 @@ MIT License – You are free to explore and adapt.
 **Vaibhavi Kahar**
 📧 [vaibhavikahar11@gmail.com](mailto:vaibhavikahar11@gmail.com)
 💼 [LinkedIn](https://www.linkedin.com/in/vaibhavi-kahar/)
-🌐 [Portfolio](https://shivam-portfolio-tan.vercel.app/)
+🌐 [Portfolio](vaibhavi-portfolio-umber.vercel.app)
