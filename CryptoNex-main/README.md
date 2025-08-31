@@ -145,8 +145,8 @@ Use these credentials to log in and explore administrative functionality.
 
 | Field        | Value                    |
 | ------------ | ------------------------ |
-| **Username** | `shivamsss123@gmail.com` |
-| **Password** | `Shivam123`              |
+| **Username** | `shivamsss123@gmail.com`,`vaibhavikahar11@gmail.com` |
+| **Password** | `Shivam123` ,`vaibhavi123`             |
 
 **Admin Permissions**
 
@@ -173,6 +173,8 @@ MIT License – You are free to explore and adapt.
 ---
 
 ## 📢 Author
+*Vaibhavi Kahar*
+📧 [vaibhavikahar11@gmail.com](mailto:vaibhavikahar11@gmail.com)
 
 **Shivam Jondhale**
 📧 [shivamjondhale82@gmail.com](mailto:shivamjondhale82@gmail.com)
