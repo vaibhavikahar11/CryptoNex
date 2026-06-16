@@ -145,8 +145,8 @@ Use these credentials to log in and explore administrative functionality.
 
 | Field        | Value                    |
 | ------------ | ------------------------ |
-| **Username** | `shivamsss123@gmail.com` |
-| **Password** | `Shivam123`              |
+| **Username** | `vaibhavikahar11@gmail.com` |
+| **Password** | `Vaibhavi123`               |
 
 **Admin Permissions**
 
@@ -174,9 +174,8 @@ MIT License – You are free to explore and adapt.
 
 ## 📢 Author
 
-**Shivam Jondhale**
-📧 [shivamjondhale82@gmail.com](mailto:shivamjondhale82@gmail.com)
-💼 [LinkedIn](https://www.linkedin.com/in/shivam-jondhale-a78ba9375)
-🌐 [Portfolio](https://shivam-portfolio-tan.vercel.app/)
+**Vaibhavi Kahar**
+📧 [vaibhavikahar11@gmail.com](mailto:vaibhavikahar11@gmail.com)
+💼 [GitHub](https://github.com/vaibhavikahar11)
 
 
