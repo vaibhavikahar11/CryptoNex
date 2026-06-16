@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM eclipse-temurin:21-jdk-slim AS build
+FROM eclipse-temurin:21-jdk-jammy AS build
 
 # Set the working directory
 WORKDIR /app
@@ -22,8 +22,8 @@ COPY src ./src
 # Package the application (skipping tests)
 RUN ./mvnw clean package -DskipTests && ls target
 
-# Stage 2: Runtime stage
-FROM eclipse-temurin:21-jdk-slim
+# Stage 2: Runtime stage (JRE only — smaller image)
+FROM eclipse-temurin:21-jre-jammy
 
 # Set the working directory
 WORKDIR /app
