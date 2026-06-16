@@ -1,5 +1,5 @@
 # Stage 1: Build stage
-FROM openjdk:21-jdk-slim as build
+FROM eclipse-temurin:21-jdk-slim AS build
 
 # Set the working directory
 WORKDIR /app
@@ -23,7 +23,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests && ls target
 
 # Stage 2: Runtime stage
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-slim
 
 # Set the working directory
 WORKDIR /app
