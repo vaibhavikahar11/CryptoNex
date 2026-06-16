@@ -1,0 +1,32 @@
+{
+  "name": "cryptonex",
+  "version": "1.0.0",
+  "description": "CryptoNex Full-Stack App — API Gateway + Frontend + Crypto Bot + Spring Boot Backend",
+  "main": "start.js",
+  "scripts": {
+    "start": "node start.js",
+    "start:gateway": "node api-gateway.js",
+    "start:frontend": "npm run dev --prefix Cryptonex-Frontend-main",
+    "start:bot": "npm start --prefix crypto_bot-main",
+    "start:backend": "cd Cryptonex-Backend-master && mvnw.cmd spring-boot:run",
+    "dev": "node start.js"
+  },
+  "keywords": [
+    "crypto",
+    "trading",
+    "fullstack",
+    "react",
+    "spring-boot",
+    "api-gateway"
+  ],
+  "author": "CryptoNex Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,94 @@
+version: "3.8"
+
+services:
+  # ============================================
+  # FRONTEND (React + Vite)
+  # ============================================
+  frontend:
+    build:
+      context: ./Cryptonex-Frontend-main
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3000
+    depends_on:
+      - api-gateway
+    networks:
+      - cryptonex-network
+    volumes:
+      - ./Cryptonex-Frontend-main:/app
+      - /app/node_modules
+
+  # ============================================
+  # CRYPTO BOT (Node.js + Express)
+  # ============================================
+  crypto-bot:
+    build:
+      context: ./crypto_bot-main
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+      - SPRING_BOOT_URL=http://api-gateway:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - api-gateway
+    networks:
+      - cryptonex-network
+    volumes:
+      - ./crypto_bot-main:/app
+      - /app/node_modules
+
+  # ============================================
+  # BACKEND (Spring Boot + Java)
+  # ============================================
+  backend:
+    build:
+      context: ./Cryptonex-Backend-master
+      dockerfile: Dockerfile
+    ports:
+      - "1106:1106"
+    environment:
+      - SERVER_PORT=1106
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - RAZORPAY_API_KEY=${RAZORPAY_API_KEY}
+      - RAZORPAY_API_SECRET=${RAZORPAY_API_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+    networks:
+      - cryptonex-network
+    volumes:
+      - ./Cryptonex-Backend-master:/app
+
+  # ============================================
+  # API GATEWAY (Express Proxy)
+  # ============================================
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - BACKEND_URL=http://backend:1106
+      - BOT_URL=http://crypto-bot:5000
+      - FRONTEND_URL=http://localhost:5173
+    depends_on:
+      - backend
+      - crypto-bot
+    networks:
+      - cryptonex-network
+
+networks:
+  cryptonex-network:
+    driver: bridge
