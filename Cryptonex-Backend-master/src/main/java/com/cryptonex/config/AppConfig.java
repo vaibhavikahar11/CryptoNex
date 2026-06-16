@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,6 +27,9 @@ import java.util.Collections;
 
 @Configuration
 public class AppConfig {
+
+	@Value("${frontend.url:http://localhost:5173}")
+	private String frontendUrl;
 	
 	 @Bean
 	    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -93,6 +97,8 @@ public class AppConfig {
 	                    "http://localhost:3000",
 	                    "http://localhost:5173",
 						"http://localhost:5174",
+						frontendUrl,
+						frontendUrl + "/",
 				 "https://cryptonex-hazel.vercel.app",
                 "https://cryptonex-git-main-shivam-jondhales-projects.vercel.app",
                 "https://cryptonex-3nhsakr1v-shivam-jondhales-projects.vercel.app",
