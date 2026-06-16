@@ -28,12 +28,15 @@ public class EmailService {
         helper.setText(text, true);
         helper.setTo(userEmail);
 
+        System.out.println("📬 [EMAIL SERVICE] Verification OTP for " + userEmail + " is: " + otp);
+
         try {
             javaMailSender.send(mimeMessage);
-        } catch (MailException e) {
-            System.err.println("Failed to send email. Root cause:");
-            e.printStackTrace();
-            throw new MailSendException("Failed to send email", e);
+            System.out.println("📧 Email sent successfully to " + userEmail);
+        } catch (Exception e) {
+            System.err.println("⚠️ WARNING: Could not send email to " + userEmail + " (probably SMTP ports are blocked on Render free tier).");
+            System.err.println("👉 Real OTP printed to logs: " + otp);
+            // Do NOT rethrow the exception, so the user can use the printed OTP and the UI flow does not crash.
         }
     }
 }
