@@ -5,6 +5,7 @@ import {
   CHAT_BOT_REQUEST,
   CHAT_BOT_SUCCESS,
 } from "./ActionTypes";
+import { API_BASE_URL } from "@/Api/api";
 
 export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
   dispatch({
@@ -14,28 +15,39 @@ export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
 
   try {
     const { data } = await axios.post(
-      "http://localhost:3000/chat", // Local bot via gateway
-      { message: prompt },
+      `${API_BASE_URL}/chat/bot`, // ✅ Spring Boot backend directly (works in production)
+      { prompt }, // ✅ matches PromptBody.getPrompt()
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
         },
-        timeout: 15000, // 15s — Gemini can be slow
+        timeout: 30000, // 30s — Gemini can be slow
       }
     );
 
-    // Use data.reply from Express.js response
-    const responseMessage =
-      data.reply && data.reply.trim() !== ""
-        ? data.reply
-        : "I can't process that request. Please ask something related to crypto price, volume, etc.";
+    // Spring Boot /chat/bot returns the raw Gemini JSON string
+    // Parse it to extract the text
+    let responseMessage = "I can't process that request. Please ask something related to crypto price, volume, etc.";
+    try {
+      const parsed = typeof data === "string" ? JSON.parse(data) : data;
+      const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text && text.trim() !== "") {
+        responseMessage = text.trim();
+      }
+    } catch {
+      // If data is already a plain string response, use it directly
+      if (typeof data === "string" && data.trim()) {
+        responseMessage = data.trim();
+      }
+    }
 
     dispatch({
       type: CHAT_BOT_SUCCESS,
       payload: { ans: responseMessage, role: "model" },
     });
 
-    console.log("Received response:", responseMessage);
+    console.log("Chatbot response:", responseMessage);
   } catch (error) {
     dispatch({
       type: CHAT_BOT_FAILURE,
