@@ -15,15 +15,18 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Retrieve token from local storage if present
-const token = localStorage.getItem("jwt");
-
-// Add the Authorization header with Bearer token
-if (token) {
-  api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
+// ✅ Use a request interceptor to ALWAYS read the latest JWT from localStorage.
+// This fixes the bug where a stale/empty token was used after fresh login.
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("jwt");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // Set default Content-Type for POST requests
 api.defaults.headers.post["Content-Type"] = "application/json";
 
 export default api;
+

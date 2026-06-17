@@ -136,6 +136,7 @@ export const sendVerificationOtp = ({ jwt, verificationType }) => {
     try {
       const response = await api.post(
         `/api/users/verification/${verificationType}/send-otp`,
+        {}, // empty body
         {
           headers: {
             Authorization: `Bearer ${jwt}`,

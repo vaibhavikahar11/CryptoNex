@@ -37,7 +37,7 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { sendMessage } from "@/Redux/Chat/Action";
 import { updateUserInformation } from "@/Redux/Auth/Action";
 import SpinnerBackdrop from "@/components/custome/SpinnerBackdrop";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { marked } from "marked";
@@ -639,8 +639,6 @@ const renderAvatar = (name) => {
 
   return (
     <div className="relative">
-      {/* Toast Notifications */}
-      <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Profile Completion Dialog */}
       <Dialog
