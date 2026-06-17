@@ -194,11 +194,11 @@ function detectIntent(userQuery, coinName) {
 }
 
 // Main chatbot route
-router.post("/", async (req, res) => {
+router.post(["/", "/bot"], async (req, res) => {
   try {
-    const { message } = req.body;
+    const message = req.body.message || req.body.prompt;
     const authHeader = req.headers.authorization;
-    if (!message) return res.status(400).json({ error: "Message is required" });
+    if (!message) return res.status(400).json({ error: "Message/prompt is required" });
 
     const cleanMessage = message.toLowerCase().trim();
     // Identify user by auth header or IP
