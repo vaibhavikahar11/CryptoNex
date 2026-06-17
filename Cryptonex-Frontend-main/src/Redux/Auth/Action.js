@@ -92,25 +92,40 @@ export const getUser = (token) => {
       return;
     }
     dispatch({ type: actionTypes.GET_USER_REQUEST });
-    try {
-      console.log(
-        `[getUser] Fetching user profile from ${API_BASE_URL}/api/users/profile`,
-      );
-      const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        timeout: 10000, // 10-second timeout
-      });
-      const user = response.data;
-      dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: user });
-      console.log("[getUser] ✅ User loaded successfully:", user);
-    } catch (error) {
-      console.error("[getUser] ❌ Error fetching user:", error.message);
-      console.error("[getUser] API_BASE_URL:", API_BASE_URL);
-      console.error("[getUser] Token:", token ? "✓ Present" : "✗ Missing");
-      // Always resolve loading — never leave UI stuck on spinner
-      dispatch({ type: actionTypes.GET_USER_FAILURE, payload: error.message });
+
+    // Retry up to 3 times to handle Render cold starts (backend wakes up slowly)
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 5000; // 5 seconds between retries
+
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        console.log(
+          `[getUser] Attempt ${attempt}/${MAX_RETRIES} — Fetching user profile from ${API_BASE_URL}/api/users/profile`,
+        );
+        const response = await axios.get(`${API_BASE_URL}/api/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          timeout: 60000, // 60-second timeout to handle Render cold starts
+        });
+        const user = response.data;
+        dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: user });
+        console.log("[getUser] ✅ User loaded successfully:", user);
+        return; // success — exit retry loop
+      } catch (error) {
+        const isTimeout = error.code === "ECONNABORTED" || error.message?.includes("timeout");
+        console.error(`[getUser] ❌ Attempt ${attempt} failed:`, error.message);
+        if (attempt < MAX_RETRIES && isTimeout) {
+          console.log(`[getUser] ⏳ Backend cold start — retrying in ${RETRY_DELAY / 1000}s...`);
+          await new Promise((res) => setTimeout(res, RETRY_DELAY));
+        } else {
+          console.error("[getUser] API_BASE_URL:", API_BASE_URL);
+          console.error("[getUser] Token:", token ? "✓ Present" : "✗ Missing");
+          // Always resolve loading — never leave UI stuck on spinner
+          dispatch({ type: actionTypes.GET_USER_FAILURE, payload: error.message });
+          return;
+        }
+      }
     }
   };
 };
