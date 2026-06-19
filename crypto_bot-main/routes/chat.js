@@ -13,7 +13,7 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 // In docker: use http://api-gateway:3000
 // In localhost: use http://localhost:3000
 // In production: use actual deployed URL
-const SPRING_BOOT_URL = process.env.SPRING_BOOT_URL || "http://localhost:3000";
+const SPRING_BOOT_URL = process.env.SPRING_BOOT_URL || "https://cryptonex-backend-jild.onrender.com";
 
 // Global in-memory object to hold conversation context
 const conversationMemory = {};
@@ -403,14 +403,22 @@ router.post(["/", "/bot"], async (req, res) => {
           orderData,
           { headers: { Authorization: authHeader } },
         );
-        const reply = `Order placed successfully for ${orderType.toLowerCase()}ing ${cryptoData.name}.`;
+        const order = response.data;
+        const totalValue = (quantity * cryptoData.price).toFixed(2);
+        const reply = `✅ Order placed successfully!\n` +
+          `• Action: ${orderType === 'BUY' ? '🟢 Bought' : '🔴 Sold'} **${cryptoData.name}**\n` +
+          `• Quantity: ${quantity.toFixed(8)} ${cryptoData.symbol.toUpperCase()}\n` +
+          `• Price per coin: $${cryptoData.price.toFixed(2)}\n` +
+          `• Total value: $${totalValue}\n` +
+          `• Order ID: #${order.id || 'N/A'}\n` +
+          `The coin will appear in your portfolio shortly.`;
         updateConversationMemory(userId, cleanMessage, reply);
         return res.json({ reply });
       } catch (error) {
         console.error("Order Error:", error.message);
-        const reply =
-          "❌ Failed to place the order. " +
-          (error.response?.data?.error || error.message);
+        const errDetail = error.response?.data?.message || error.response?.data?.error || error.message;
+        const reply = `❌ Failed to place the order: ${errDetail}\n` +
+          `Please check your wallet balance and try again.`;
         updateConversationMemory(userId, cleanMessage, reply);
         return res.json({ reply });
       }

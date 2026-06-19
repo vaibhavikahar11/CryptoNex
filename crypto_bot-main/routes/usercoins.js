@@ -12,7 +12,7 @@ const router = express.Router();
 // In docker: use http://api-gateway:3000
 // In localhost: use http://localhost:3000
 // In production: use actual deployed URL
-const SPRING_BOOT_URL = process.env.SPRING_BOOT_URL || "http://localhost:3000";
+const SPRING_BOOT_URL = process.env.SPRING_BOOT_URL || "https://cryptonex-backend-jild.onrender.com";
 
 // Helper function to fetch user profile from Spring Boot
 async function fetchUserProfile(authHeader) {
