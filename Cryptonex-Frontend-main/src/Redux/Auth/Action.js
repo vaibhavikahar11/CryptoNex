@@ -93,9 +93,9 @@ export const getUser = (token) => {
     }
     dispatch({ type: actionTypes.GET_USER_REQUEST });
 
-    // Retry up to 3 times to handle Render cold starts (backend wakes up slowly)
+    // Retry up to 3 times to handle Render cold starts
     const MAX_RETRIES = 3;
-    const RETRY_DELAY = 5000; // 5 seconds between retries
+    const RETRY_DELAY = 3000; // 3 seconds between retries
 
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
       try {
@@ -106,17 +106,21 @@ export const getUser = (token) => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          timeout: 60000, // 60-second timeout to handle Render cold starts
+          timeout: 25000, // 25s per attempt (was 60s)
         });
         const user = response.data;
         dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: user });
         console.log("[getUser] ✅ User loaded successfully:", user);
         return; // success — exit retry loop
       } catch (error) {
-        const isTimeout = error.code === "ECONNABORTED" || error.message?.includes("timeout");
+        const isRetryable =
+          error.code === "ECONNABORTED" ||
+          error.message?.includes("timeout") ||
+          error.response?.status === 500 || // backend cold-start crash
+          error.response?.status === 503;   // service unavailable
         console.error(`[getUser] ❌ Attempt ${attempt} failed:`, error.message);
-        if (attempt < MAX_RETRIES && isTimeout) {
-          console.log(`[getUser] ⏳ Backend cold start — retrying in ${RETRY_DELAY / 1000}s...`);
+        if (attempt < MAX_RETRIES && isRetryable) {
+          console.log(`[getUser] ⏳ Retrying in ${RETRY_DELAY / 1000}s...`);
           await new Promise((res) => setTimeout(res, RETRY_DELAY));
         } else {
           console.error("[getUser] API_BASE_URL:", API_BASE_URL);

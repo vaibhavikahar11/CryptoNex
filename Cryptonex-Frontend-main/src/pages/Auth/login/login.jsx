@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-// import "./Login.css";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,29 +13,55 @@ import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/Redux/Auth/Action";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import SpinnerBackdrop from "@/components/custome/SpinnerBackdrop";
-import { useToast } from "@/components/ui/use-toast";
+import { useState, useEffect } from "react";
+import { API_BASE_URL } from "@/Api/api";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
 });
+
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { auth } = useSelector((store) => store);
-  const { toast } = useToast();
-  // Use local state so only the submit action shows the spinner,
-  // not the background getUser call that runs on app load
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState("");
+  const [elapsed, setElapsed] = useState(0);
+
+  // 🔥 Wake-up ping: as soon as the user opens the login page,
+  // silently ping the backend so it starts warming up BEFORE they submit.
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/`, { method: "GET", mode: "no-cors" }).catch(() => {});
+  }, []);
+
+  // Update the loading message as time passes so users understand the wait
+  useEffect(() => {
+    if (!isSubmitting) {
+      setElapsed(0);
+      setLoadingMsg("");
+      return;
+    }
+    const messages = [
+      { after: 0,  msg: "Connecting to server..." },
+      { after: 4,  msg: "⏳ Server is starting up, please wait..." },
+      { after: 15, msg: "🚀 Almost there, server is waking up..." },
+      { after: 30, msg: "☕ Still starting... (Render free tier needs ~60s on first load)" },
+      { after: 50, msg: "🔄 Nearly done, hang tight..." },
+    ];
+    let secs = 0;
+    const interval = setInterval(() => {
+      secs += 1;
+      setElapsed(secs);
+      const active = [...messages].reverse().find((m) => secs >= m.after);
+      if (active) setLoadingMsg(active.msg);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isSubmitting]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = async (data) => {
@@ -44,8 +69,8 @@ const LoginForm = () => {
     data.navigate = navigate;
     await dispatch(login(data));
     setIsSubmitting(false);
-    console.log("login form", data);
   };
+
   return (
     <div className="space-y-5">
       <h1 className="text-center text-xl">Login</h1>
@@ -60,25 +85,26 @@ const LoginForm = () => {
                   <Input
                     {...field}
                     className="border w-full border-gray-700 py-5 px-5"
-                    placeholder="enter your email"
+                    placeholder="Enter your email"
+                    disabled={isSubmitting}
                   />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="password" // Added password field
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Input
                     {...field}
-                    type="password" // Added type attribute for password input
+                    type="password"
                     className="border w-full border-gray-700 py-5 px-5"
                     placeholder="Enter your password"
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -86,21 +112,39 @@ const LoginForm = () => {
             )}
           />
 
-          {!isSubmitting ? (
-            <Button type="submit" className="w-full  py-5">
-              Login
-            </Button>
-          ) : (
-            <SpinnerBackdrop show={true} />
+          <Button
+            type="submit"
+            className="w-full py-5 relative"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center gap-2 justify-center">
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+                Logging in...
+              </span>
+            ) : (
+              "Login"
+            )}
+          </Button>
+
+          {/* Friendly progress message during cold start */}
+          {isSubmitting && loadingMsg && (
+            <div className="text-center space-y-2 pt-1">
+              <p className="text-sm text-yellow-400 animate-pulse">{loadingMsg}</p>
+              {/* Progress bar */}
+              <div className="w-full bg-gray-700 rounded-full h-1.5">
+                <div
+                  className="bg-yellow-400 h-1.5 rounded-full transition-all duration-1000"
+                  style={{ width: `${Math.min((elapsed / 70) * 100, 95)}%` }}
+                />
+              </div>
+            </div>
           )}
         </form>
       </Form>
-
-      {/* {toast({
-        title: "Scheduled: Catch up ",
-        description: "Friday, February 10, 2023 at 5:57 PM",
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-      })} */}
     </div>
   );
 };
