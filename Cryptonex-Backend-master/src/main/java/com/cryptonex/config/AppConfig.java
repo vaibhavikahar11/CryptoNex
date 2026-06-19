@@ -94,11 +94,14 @@ public class AppConfig {
 	            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 	                CorsConfiguration cfg = new CorsConfiguration();
 	                cfg.setAllowedOrigins(Arrays.asList(
-	                    "http://localhost:3000",
-	                    "http://localhost:5173",
-						"http://localhost:5174",
-						frontendUrl,
-						frontendUrl + "/",
+                    "http://localhost:3000",
+                    "http://localhost:5173",
+					"http://localhost:5174",
+					frontendUrl,
+					frontendUrl + "/",
+					// Deployed Vercel frontend
+					"https://crypto-nex-rust.vercel.app",
+					"https://crypto-nex-rust.vercel.app/",
 				 "https://cryptonex-hazel.vercel.app",
                 "https://cryptonex-git-main-shivam-jondhales-projects.vercel.app",
                 "https://cryptonex-3nhsakr1v-shivam-jondhales-projects.vercel.app",
@@ -114,7 +117,7 @@ public class AppConfig {
 
 	                    "http://localhost:4200"
 							
-	                ));
+                ));
 	                cfg.setAllowedMethods(Collections.singletonList("*"));
 	                cfg.setAllowCredentials(true);
 	                cfg.setAllowedHeaders(Collections.singletonList("*"));
