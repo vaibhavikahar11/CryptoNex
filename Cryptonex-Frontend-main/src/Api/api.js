@@ -1,10 +1,14 @@
 import axios from "axios";
 
 // API Base URLs Configuration
-const DEPLOYED = "https://cryptonex-backend.onrender.com"; // Your Render backend URL
+const DEPLOYED = "https://cryptonex-backend-jild.onrender.com"; // Actual Render Spring Boot backend
 const LOCAL_GATEWAY =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; // Local API Gateway
 const LOCALHOST = "http://localhost:1106"; // Direct backend (Spring Boot)
+
+// Chatbot service (Node.js bot on Render)
+export const CHATBOT_BASE_URL =
+  import.meta.env.VITE_CHATBOT_URL || "https://cryptonex-bot.onrender.com";
 
 // Use VITE_API_BASE_URL if provided (allows dynamic config on Vercel), otherwise fall back to production/dev defaults.
 export const API_BASE_URL =

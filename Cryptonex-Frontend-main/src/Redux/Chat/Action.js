@@ -5,7 +5,7 @@ import {
   CHAT_BOT_REQUEST,
   CHAT_BOT_SUCCESS,
 } from "./ActionTypes";
-import { API_BASE_URL } from "@/Api/api";
+import { CHATBOT_BASE_URL } from "@/Api/api";
 
 export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
   dispatch({
@@ -15,8 +15,8 @@ export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
 
   try {
     const { data } = await axios.post(
-      `${API_BASE_URL}/chat/bot`, // ✅ Spring Boot backend directly (works in production)
-      { prompt }, // ✅ matches PromptBody.getPrompt()
+      `${CHATBOT_BASE_URL}/chat/bot`, // ✅ Node.js chatbot service on Render
+      { message: prompt }, // ✅ Bot expects { message: ... }
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -26,21 +26,10 @@ export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
       }
     );
 
-    // Spring Boot /chat/bot returns the raw Gemini JSON string
-    // Parse it to extract the text
-    let responseMessage = "I can't process that request. Please ask something related to crypto price, volume, etc.";
-    try {
-      const parsed = typeof data === "string" ? JSON.parse(data) : data;
-      const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text && text.trim() !== "") {
-        responseMessage = text.trim();
-      }
-    } catch {
-      // If data is already a plain string response, use it directly
-      if (typeof data === "string" && data.trim()) {
-        responseMessage = data.trim();
-      }
-    }
+    // The Node.js bot returns { reply: "..." }
+    const responseMessage =
+      data?.reply ||
+      "I can't process that request. Please ask something related to crypto price, volume, etc.";
 
     dispatch({
       type: CHAT_BOT_SUCCESS,
@@ -57,3 +46,4 @@ export const sendMessage = ({ prompt, jwt }) => async (dispatch) => {
     console.error("Chatbot error:", error);
   }
 };
+
