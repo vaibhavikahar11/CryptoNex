@@ -33,9 +33,10 @@ async function fetchCryptoPrices() {
         }
 
         const stmt = db.prepare(`
-            INSERT INTO crypto_prices (symbol, name, price, market_cap, volume_24h, change_24h, last_updated)
-            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+            INSERT INTO crypto_prices (coin_id, symbol, name, price, market_cap, volume_24h, change_24h, last_updated)
+            VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
             ON CONFLICT(symbol) DO UPDATE SET
+                coin_id = excluded.coin_id,
                 price = excluded.price,
                 market_cap = excluded.market_cap,
                 volume_24h = excluded.volume_24h,
@@ -46,6 +47,7 @@ async function fetchCryptoPrices() {
         db.serialize(() => {
             coins.forEach(coin => {
                 stmt.run(
+                    coin.id,                          // CoinGecko ID (e.g. "bitcoin")
                     coin.symbol.toUpperCase(),
                     coin.name,
                     coin.current_price,

@@ -69,7 +69,7 @@ function cleanResponse(text) {
 async function getCryptoData(coinName) {
   return new Promise((resolve, reject) => {
     db.get(
-      "SELECT name, symbol, price, market_cap, volume_24h, change_24h, last_updated FROM crypto_prices WHERE LOWER(name) = ? OR LOWER(symbol) = ? ORDER BY last_updated DESC LIMIT 1",
+      "SELECT coin_id, name, symbol, price, market_cap, volume_24h, change_24h, last_updated FROM crypto_prices WHERE LOWER(name) = ? OR LOWER(symbol) = ? ORDER BY last_updated DESC LIMIT 1",
       [coinName.toLowerCase(), coinName.toLowerCase()],
       (err, row) => {
         if (err) reject("Database error.");
@@ -389,8 +389,9 @@ router.post(["/", "/bot"], async (req, res) => {
         }
       }
 
-      // Use the full coin name from the database (in lowercase) as coin id
-      const coinId = cryptoData.name.toLowerCase();
+      // Use coin_id from SQLite (real CoinGecko ID like "bitcoin", "ethereum")
+      // Fall back to name.toLowerCase() if coin_id is not yet populated
+      const coinId = cryptoData.coin_id || cryptoData.name.toLowerCase().replace(/ /g, "-");
       const orderData = {
         coinId,
         quantity: parseFloat(quantity.toFixed(8)),
