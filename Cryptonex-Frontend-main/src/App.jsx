@@ -7,8 +7,9 @@ import StockDetails from "./pages/StockDetails/StockDetails";
 import Profile from "./pages/Profile/Profile";
 import Notfound from "./pages/Notfound/Notfound";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getUser } from "./Redux/Auth/Action";
+import SplashScreen from "./components/SplashScreen";
 import Wallet from "./pages/Wallet/Wallet";
 import Watchlist from "./pages/Watchlist/Watchlist";
 import TwoFactorAuth from "./pages/Auth/TwoFactorAuth";
@@ -50,6 +51,16 @@ function App() {
   const { auth } = useSelector((store) => store);
   const dispatch = useDispatch();
 
+  // Show splash once per browser session
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem("splashShown");
+  });
+
+  const handleSplashComplete = () => {
+    sessionStorage.setItem("splashShown", "true");
+    setShowSplash(false);
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("jwt");
     if (token) {
@@ -63,6 +74,8 @@ function App() {
 
   return (
     <div className="animated-bg" style={{ position: "relative", minHeight: "100vh" }}>
+      {/* Premium splash screen — shows once per browser session */}
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       {/* Floating ambient orbs — vibrant aurora colors */}
       <div className="orb orb-1" />
       <div className="orb orb-2" />
