@@ -1044,18 +1044,8 @@ body {
   100% { background-position: 0% 50%; }
 }
 .animated-bg {
-  background: linear-gradient(135deg,
-    hsl(224, 71%, 4%)  0%,
-    hsl(260, 80%, 7%)  15%,
-    hsl(195, 90%, 5%)  30%,
-    hsl(280, 70%, 6%)  45%,
-    hsl(230, 60%, 5%)  60%,
-    hsl(210, 80%, 5%)  75%,
-    hsl(250, 70%, 6%)  90%,
-    hsl(224, 71%, 4%)  100%
-  );
-  background-size: 600% 600%;
-  animation: auroraShift 24s ease infinite;
+  /* Parallax Pixel Stars — deep space radial gradient base */
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
   min-height: 100vh;
   position: relative;
 }
@@ -1123,17 +1113,18 @@ body {
 
 .orb { position: fixed; border-radius: 50%; filter: blur(90px); pointer-events: none; z-index: 0; }
 
+/* Orbs — kept at low opacity so the star field shows through */
 /* Indigo — top right */
 .orb-1 {
   width: 700px; height: 700px;
-  background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
   top: -250px; right: -250px;
   animation: orbFloat 10s ease-in-out infinite;
 }
 /* Violet — bottom left */
 .orb-2 {
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(139,92,246,0.10) 0%, transparent 70%);
   bottom: -200px; left: -200px;
   animation: orbFloat 14s ease-in-out infinite reverse;
   animation-delay: -4s;
@@ -1141,7 +1132,7 @@ body {
 /* Cyan / teal — center */
 .orb-3 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(6,182,212,0.13) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
   top: 35%; left: 28%;
   animation: orbDrift 12s ease-in-out infinite;
   animation-delay: -2s;
@@ -1149,17 +1140,16 @@ body {
 /* Rose / crimson — top left */
 .orb-4 {
   width: 450px; height: 450px;
-  background: radial-gradient(circle, rgba(244,63,94,0.11) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(244,63,94,0.07) 0%, transparent 70%);
   top: -100px; left: 15%;
   animation: orbPulse 16s ease-in-out infinite;
   animation-delay: -6s;
 }
-/* Amber / gold — removed (was causing bright yellow patch at page bottom) */
 .orb-5 { display: none; }
 /* Pink — mid right */
 .orb-6 {
   width: 280px; height: 280px;
-  background: radial-gradient(circle, rgba(236,72,153,0.09) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(236,72,153,0.06) 0%, transparent 70%);
   top: 55%; right: 5%;
   animation: orbDrift 20s ease-in-out infinite reverse;
   animation-delay: -10s;
@@ -1255,6 +1245,75 @@ body {
   background: linear-gradient(180deg, transparent, rgba(245,158,11,0.10), transparent);
   animation-delay: 8s;
   width: 100px;
+}
+
+/* ============================================================
+   GLOBAL PARALLAX STAR LAYERS (StarBackground component)
+   box-shadow values are injected by StarBackground.jsx via a dynamic <style> tag
+   ============================================================ */
+
+.app-stars-small,
+.app-stars-medium,
+.app-stars-big {
+  position: fixed;       /* fixed so stars don't scroll with page content */
+  top: 0;
+  left: 0;
+  background: transparent;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layer 1 — 700 tiny 1px stars, fastest (50s) */
+.app-stars-small {
+  width: 1px;
+  height: 1px;
+  animation: app-animStar 50s linear infinite;
+}
+.app-stars-small::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+}
+
+/* Layer 2 — 200 medium 2px stars, medium speed (100s) */
+.app-stars-medium {
+  width: 2px;
+  height: 2px;
+  animation: app-animStar 100s linear infinite;
+}
+.app-stars-medium::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: transparent;
+}
+
+/* Layer 3 — 100 large 3px stars, slowest (150s) */
+.app-stars-big {
+  width: 3px;
+  height: 3px;
+  animation: app-animStar 150s linear infinite;
+}
+.app-stars-big::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+}
+
+@keyframes app-animStar {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-2000px); }
 }
 
 /* ============================================================
