@@ -80,7 +80,7 @@ function App() {
         position: "relative",
         minHeight: "100vh",
         width: "100%",
-        background: "radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)",
+        background: "radial-gradient(125% 125% at 50% 90%, #020617 40%, #0f172a 100%)",
         overflow: "hidden",
       }}
     >

@@ -8,45 +8,50 @@
 /* Define Default Theme Variables */
 @layer base {
 
-  /* True Default Theme Variables - Dark Mode */
+  /* Slate-950 Dark Theme */
   :root {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+    /* slate-950 = #020617 */
+    --background: 222 84% 4.9%;
+    --foreground: 213 31% 91%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    /* slate-900 = #0f172a */
+    --card: 222 47% 11.2%;
+    --card-foreground: 213 31% 91%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 222 47% 11.2%;
+    --popover-foreground: 213 31% 91%;
 
-    --primary: 210 20% 98%;
-    --primary-light: 210 20% 88%;
-    --primary-dark: 210 20% 68%;
-    --primary-foreground: 220.9 39.3% 11%;
+    /* text / primary */
+    --primary: 213 31% 91%;
+    --primary-light: 214 32% 96%;
+    --primary-dark: 215 20% 65%;
+    --primary-foreground: 222 84% 4.9%;
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-light: 215 27.9% 26.9%;
-    --secondary-dark: 215 27.9% 6.9%;
-    --secondary-foreground: 210 20% 98%;
+    /* slate-800 = #1e293b */
+    --secondary: 215 28% 17%;
+    --secondary-light: 215 19% 27%;
+    --secondary-dark: 222 47% 11.2%;
+    --secondary-foreground: 213 31% 91%;
 
-    --muted: 215 27.9% 16.9%;
-    --muted-light: 215 27.9% 26.9%;
-    --muted-dark: 215 27.9% 6.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 215 28% 17%;
+    --muted-light: 215 19% 27%;
+    --muted-dark: 222 47% 11.2%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 215 27.9% 16.9%;
-    --accent-light: 215 27.9% 26.9%;
-    --accent-dark: 215 27.9% 6.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 215 28% 17%;
+    --accent-light: 215 19% 27%;
+    --accent-dark: 222 47% 11.2%;
+    --accent-foreground: 213 31% 91%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-light: 0 62.8% 40.6%;
     --destructive-dark: 0 62.8% 20.6%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 213 31% 91%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
+    /* slate-800 borders */
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 215 20% 65%;
 
     --radius: 0.5rem;
   }
@@ -99,46 +104,46 @@
 @layer base {
 
   /* ============================
-     Default Theme Variables
+     Default Theme (Slate-950)
      ============================ */
   .default {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
+    --background: 222 84% 4.9%;
+    --foreground: 213 31% 91%;
 
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
+    --card: 222 47% 11.2%;
+    --card-foreground: 213 31% 91%;
 
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 222 47% 11.2%;
+    --popover-foreground: 213 31% 91%;
 
-    --primary: 210 20% 98%;
-    --primary-light: 210 20% 88%;
-    --primary-dark: 210 20% 78%;
-    --primary-foreground: 220.9 39.3% 11%;
+    --primary: 213 31% 91%;
+    --primary-light: 214 32% 96%;
+    --primary-dark: 215 20% 65%;
+    --primary-foreground: 222 84% 4.9%;
 
-    --secondary: 215 27.9% 16.9%;
-    --secondary-light: 215 27.9% 26.9%;
-    --secondary-dark: 215 27.9% 6.9%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 215 28% 17%;
+    --secondary-light: 215 19% 27%;
+    --secondary-dark: 222 47% 11.2%;
+    --secondary-foreground: 213 31% 91%;
 
-    --muted: 215 27.9% 16.9%;
-    --muted-light: 215 27.9% 26.9%;
-    --muted-dark: 215 27.9% 6.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
+    --muted: 215 28% 17%;
+    --muted-light: 215 19% 27%;
+    --muted-dark: 222 47% 11.2%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 215 27.9% 16.9%;
-    --accent-light: 215 27.9% 26.9%;
-    --accent-dark: 215 27.9% 6.9%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 215 28% 17%;
+    --accent-light: 215 19% 27%;
+    --accent-dark: 222 47% 11.2%;
+    --accent-foreground: 213 31% 91%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-light: 0 62.8% 40.6%;
     --destructive-dark: 0 62.8% 20.6%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 213 31% 91%;
 
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 216 12.2% 83.9%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 215 20% 65%;
 
     --radius: 0.5rem;
   }
@@ -1045,7 +1050,7 @@ body {
 }
 .animated-bg {
   /* Parallax Pixel Stars — deep space radial gradient base */
-  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
   min-height: 100vh;
   position: relative;
 }
@@ -1325,7 +1330,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+  background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
