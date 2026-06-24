@@ -16,7 +16,6 @@ import AccountVarificationForm from "./AccountVarificationForm";
 import {
   VerifiedIcon,
   Shield,
-  Palette,
   User,
   Mail,
   Phone,
@@ -47,17 +46,7 @@ const getProfilePhotosByGender = (gender) => {
   }
 };
 
-const THEME_OPTIONS = [
-  { id: "default", label: "Default",  color: "#6366f1" },
-  { id: "red",     label: "Red",      color: "#ef4444" },
-  { id: "green",   label: "Emerald",  color: "#10b981" },
-  { id: "orange",  label: "Orange",   color: "#f97316" },
-  { id: "rose",    label: "Rose",     color: "#f43f5e" },
-  { id: "blue",    label: "Blue",     color: "#3b82f6" },
-  { id: "pink",    label: "Pink",     color: "#ec4899" },
-  { id: "yellow",  label: "Amber",    color: "#f59e0b" },
-  { id: "violet",  label: "Violet",   color: "#8b5cf6" },
-];
+
 
 // --- Small reusable glassmorphism card ---
 function GlassPanel({ children, style = {}, className = "" }) {
@@ -118,7 +107,6 @@ const Profile = () => {
   const { user, loading } = authState;
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isThemeDialogOpen, setIsThemeDialogOpen] = useState(false);
   const [editableUserInfo, setEditableUserInfo] = useState({
     fullName: user?.fullName || "",
     mobile: user?.mobile || "",
@@ -175,20 +163,7 @@ const Profile = () => {
     dispatch(verifyOtp({ jwt: localStorage.getItem("jwt"), otp }));
   };
 
-  const handleThemeChange = async (selectedTheme) => {
-    try {
-      await dispatch(updateUserInformation({ theme: selectedTheme === "default" ? "" : selectedTheme }));
-      const themeClasses = ["red","green","orange","rose","blue","pink","yellow","violet"];
-      document.documentElement.classList.remove(...themeClasses);
-      if (selectedTheme !== "default" && themeClasses.includes(selectedTheme)) {
-        document.documentElement.classList.add(selectedTheme);
-      }
-      toast.success(`${selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1)} theme applied!`);
-      setIsThemeDialogOpen(false);
-    } catch {
-      toast.error("Failed to change theme.");
-    }
-  };
+
 
   const profilePhoto = editableUserInfo.profilePhoto
     ? `/${editableUserInfo.profilePhoto}`
@@ -392,44 +367,7 @@ const Profile = () => {
         </div>
       </motion.div>
 
-      {/* ── THEME SELECTOR ── */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3 }}>
-        <GlassPanel>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.3)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Palette size={18} color="#8b5cf6" />
-              </div>
-              <div>
-                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#e2e8f0" }}>App Theme</h3>
-                <p style={{ fontSize: 11, color: "rgba(148,163,184,0.5)" }}>Customize your color palette</p>
-              </div>
-            </div>
-          </div>
 
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
-            {THEME_OPTIONS.map((theme, idx) => (
-              <button
-                key={theme.id}
-                onClick={() => handleThemeChange(theme.id)}
-                title={theme.label}
-                className="theme-dot"
-                style={{
-                  background: theme.color,
-                  border: "2px solid rgba(255,255,255,0.15)",
-                  "--dot-color": theme.color,
-                  "--dot-color-dim": `${theme.color}55`,
-                  animationDelay: `${idx * 0.3}s`,
-                }}
-                aria-label={`Select ${theme.label} theme`}
-              />
-            ))}
-          </div>
-          <p style={{ fontSize: 11, color: "rgba(148,163,184,0.4)", marginTop: 12 }}>
-            Click any color to instantly apply that theme across the app
-          </p>
-        </GlassPanel>
-      </motion.div>
 
     </div>
   );
