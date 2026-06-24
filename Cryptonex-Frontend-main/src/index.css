@@ -1258,23 +1258,22 @@ body {
 }
 
 /* ============================================================
-   SPLASH SCREEN
+   SPLASH SCREEN — Parallax Pixel Stars
    ============================================================ */
 
-/* Root container */
+/* Root container — starfield background matching the original codepen */
 .splash-root {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: #06061a;
+  background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  cursor: none; /* hide cursor so gradient feels magical */
+  cursor: none;
 
-  /* Enter animation */
   opacity: 0;
   transform: scale(1.04);
   transition: opacity 0.5s ease, transform 0.5s ease;
@@ -1286,7 +1285,6 @@ body {
   transform: scale(1);
 }
 
-/* Exit: scale up slightly + fade out */
 .splash-root.splash-exiting {
   opacity: 0;
   transform: scale(1.06);
@@ -1294,46 +1292,106 @@ body {
   pointer-events: none;
 }
 
-/* ── Ambient orbs ── */
+/* ── Parallax Star Layers ──
+   box-shadow values are injected dynamically by the component via a <style> tag
+   so that ::after pseudo-elements also get the same shadows (inline styles can't do this).
+   The animation moves each div from Y=0 to Y=-2000px; the ::after clone starts at
+   top:2000px so it seamlessly fills the gap — creating an infinite loop. */
+
+.splash-stars-small,
+.splash-stars-medium,
+.splash-stars-big {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  border-radius: 50%;
+}
+
+/* Layer 1 — 700 tiny 1px stars, fastest scroll (50s) */
+.splash-stars-small {
+  width: 1px;
+  height: 1px;
+  animation: splash-animStar 50s linear infinite;
+}
+.splash-stars-small::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+}
+
+/* Layer 2 — 200 medium 2px stars, medium scroll (100s) */
+.splash-stars-medium {
+  width: 2px;
+  height: 2px;
+  animation: splash-animStar 100s linear infinite;
+}
+.splash-stars-medium::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: transparent;
+}
+
+/* Layer 3 — 100 large 3px stars, slowest scroll (150s) */
+.splash-stars-big {
+  width: 3px;
+  height: 3px;
+  animation: splash-animStar 150s linear infinite;
+}
+.splash-stars-big::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  left: 0;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+}
+
+/* The core parallax star movement keyframe */
+@keyframes splash-animStar {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-2000px); }
+}
+
+/* ── Colour orbs — low opacity so they don't wash out the stars ── */
 .splash-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(100px);
   pointer-events: none;
-  animation: splash-float 8s ease-in-out infinite;
+  animation: splash-float 10s ease-in-out infinite;
 }
 
 .splash-orb-1 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%);
-  top: -100px;
-  left: -100px;
+  background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
+  top: -120px;
+  left: -120px;
   animation-delay: 0s;
 }
 
 .splash-orb-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, transparent 70%);
-  bottom: -80px;
-  right: -80px;
-  animation-delay: 2.5s;
-}
-
-.splash-orb-3 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(167,139,250,0.25) 0%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: 1.2s;
+  background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 3s;
 }
 
 @keyframes splash-float {
   0%, 100% { transform: translateY(0px) scale(1); }
-  50%       { transform: translateY(-20px) scale(1.05); }
+  50%       { transform: translateY(-18px) scale(1.04); }
 }
 
 /* ── Content wrapper ── */
@@ -1351,46 +1409,45 @@ body {
   width: min(92vw, 900px);
   height: auto;
   display: block;
-  filter: drop-shadow(0 0 40px rgba(124,58,237,0.4));
+  filter: drop-shadow(0 0 40px rgba(124,58,237,0.5));
 }
 
-/* Base dark layer */
+/* Base dark layer — always visible so text reads against the star field */
 .splash-text-base {
   font-size: 170px;
   font-weight: 900;
-  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-family: 'Outfit', 'Lato', 'Inter', system-ui, sans-serif;
   letter-spacing: -4px;
 }
 
-/* Stroke outline layer */
+/* Glowing outline layer */
 .splash-text-outline {
   font-size: 170px;
   font-weight: 900;
-  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-family: 'Outfit', 'Lato', 'Inter', system-ui, sans-serif;
   letter-spacing: -4px;
   opacity: 0;
   animation: splash-fadein 0.8s ease 0.5s forwards;
 }
 
-/* Gradient fill layer */
+/* Mouse-tracked gradient fill */
 .splash-text-fill {
   font-size: 170px;
   font-weight: 900;
-  font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+  font-family: 'Outfit', 'Lato', 'Inter', system-ui, sans-serif;
   letter-spacing: -4px;
   opacity: 0;
   animation: splash-fadein 0.9s ease 0.6s forwards;
-  transition: fill 0.05s linear; /* smooth gradient tracking */
 }
 
-/* ── Tagline ── */
+/* ── Tagline — matches Lato light style from the original ── */
 .splash-tagline {
   font-size: clamp(14px, 2vw, 20px);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Lato', 'Inter', system-ui, sans-serif;
   font-weight: 300;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
   text-transform: uppercase;
-  color: rgba(148, 163, 184, 0.85);
+  color: rgba(200, 220, 240, 0.75);
   opacity: 0;
   animation: splash-fadein 1s ease 1.2s forwards;
   margin-top: 4px;
@@ -1403,7 +1460,7 @@ body {
   animation:
     splash-fadein 0.6s ease 1.6s forwards,
     splash-spin 3s linear 1.6s infinite;
-  filter: drop-shadow(0 0 12px rgba(124,58,237,0.8));
+  filter: drop-shadow(0 0 14px rgba(124,58,237,0.9));
 }
 
 @keyframes splash-spin {
@@ -1418,7 +1475,7 @@ body {
   left: 0;
   width: 100%;
   height: 3px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.05);
   z-index: 3;
 }
 
@@ -1430,9 +1487,12 @@ body {
   border-radius: 0 2px 2px 0;
 }
 
-/* ── Shared fade-in keyframe ── */
+/* ── Shared fade-in ── */
 @keyframes splash-fadein {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+
+
 
