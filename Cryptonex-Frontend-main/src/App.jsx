@@ -74,29 +74,26 @@ function App() {
     : shouldShowNavbar(location.pathname, routes, auth.user?.role);
 
   return (
-    <div className="animated-bg" style={{ position: "relative", minHeight: "100vh" }}>
-      {/* Premium splash screen — shows once per browser session */}
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
-
-      {/* Parallax Pixel Stars — rendered on every page */}
+    <div
+      className="app-root"
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        width: "100%",
+        background: "radial-gradient(125% 125% at 50% 90%, #000000 40%, #0d1a36 100%)",
+        overflow: "hidden",
+      }}
+    >
+      {/* Parallax Pixel Stars */}
       <StarBackground />
-      {/* Floating ambient orbs — vibrant aurora colors */}
-      <div className="orb orb-1" />
-      <div className="orb orb-2" />
-      <div className="orb orb-3" />
-      <div className="orb orb-4" />
-      <div className="orb orb-5" />
-      <div className="orb orb-6" />
 
-      {/* Aurora streaks — sweeping colored light beams */}
-      <div className="aurora-streak aurora-streak-1" />
-      <div className="aurora-streak aurora-streak-2" />
-      <div className="aurora-streak aurora-streak-3" />
+      {/* Splash screen — once per browser session */}
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
 
       {/* Session idle security blur */}
       {auth.user && <SessionBlur />}
 
-      {/* Toast container for notifications - z-index must be above dialog overlay (50) */}
+      {/* Toast notifications */}
       <ToastContainer
         position="top-right"
         autoClose={4000}
@@ -155,7 +152,7 @@ function App() {
         </>
       )}
 
-      {/* Vercel Analytics component added at the root level */}
+      {/* Vercel Analytics */}
       <Analytics />
     </div>
   );

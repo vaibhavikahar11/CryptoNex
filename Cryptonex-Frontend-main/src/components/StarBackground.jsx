@@ -1,28 +1,32 @@
 import { useEffect, useMemo } from "react";
 
 /**
- * StarBackground — Parallax Pixel Stars applied globally to all pages.
- * 3 layers of white star dots scroll upward at different speeds,
- * creating a deep-space parallax effect behind every page of the app.
+ * StarBackground — Parallax Pixel Stars for global use across all pages.
  *
- * Uses dynamic <style> injection so ::after pseudo-elements can carry
- * the same box-shadow values as their parent divs (inline styles can't target ::after).
+ * 3 layers of white dot stars scrolling upward at different speeds,
+ * producing a deep-space parallax effect over the dark horizon gradient.
+ *
+ * Technique: random box-shadow values generated in JS (mirrors the Sass
+ * multiple-box-shadow() function). A dynamic <style> tag is injected so
+ * that ::after pseudo-elements carry the same shadows — enabling the
+ * seamless infinite scroll loop.
  */
 
-function multipleBoxShadow(n) {
+function multipleBoxShadow(n, color = "#FFF") {
   const entries = [];
   for (let i = 0; i < n; i++) {
     const x = Math.floor(Math.random() * 2000);
     const y = Math.floor(Math.random() * 2000);
-    entries.push(`${x}px ${y}px #FFF`);
+    entries.push(`${x}px ${y}px ${color}`);
   }
   return entries.join(", ");
 }
 
 export default function StarBackground() {
-  const shadowsSmall  = useMemo(() => multipleBoxShadow(700), []);
-  const shadowsMedium = useMemo(() => multipleBoxShadow(200), []);
-  const shadowsBig    = useMemo(() => multipleBoxShadow(100), []);
+  // 700 small (1px) | 200 medium (2px) | 100 large (3px, faint blue tint)
+  const shadowsSmall  = useMemo(() => multipleBoxShadow(700, "#FFF"), []);
+  const shadowsMedium = useMemo(() => multipleBoxShadow(200, "#FFF"), []);
+  const shadowsBig    = useMemo(() => multipleBoxShadow(100, "#d0e8ff"), []);
 
   useEffect(() => {
     const styleEl = document.createElement("style");
